@@ -1,33 +1,31 @@
-SELECT a.Epost, a.Mobiltelefon, a.KundID, (count(*)*1.0/7118192)*100 as '%'  ,count(*) as 'Count' 
-FROM
-(
-SELECT
-CASE WHEN Epost IS NOT NULL THEN 1 ELSE 0 END AS Epost,
-CASE WHEN MobilTelefon IS NOT NULL THEN 1 ELSE 0 END AS MobilTelefon,
-CASE WHEN KundID IS NOT NULL THEN 1 ELSE 0 END AS KundID
-FROM r_CustomerID_NonMatch 
-) a
-GROUP BY a.Epost, a.MobilTelefon, a.KundID
-ORDER BY '%' DESC
+/****** Script for SelectTopNRows command from SSMS  ******/
+
+SELECT 
+ q.KundIdExists 
+,q.namnExists 
+,q.EpostExists 
+,q.MobiltelefonExists ,
+COUNT(*),
+(COUNT(*)*1.0)/34249*100
+
+FROM (
+
+SELECT CASE WHEN KundId IS NULL THEN 0 ELSE 1 END AS KundIdExists,
+CASE WHEN LEN([Efternamn]) <3 OR  Efternamn IS NULL THEN 0 ELSE 1 END AS namnExists,
+CASE WHEN LEN([Epost]) <3  OR  [Epost] IS NULL THEN 0 ELSE 1 END AS EpostExists,
+CASE WHEN LEN([Mobiltelefon]) <3  OR  [Mobiltelefon] IS NULL THEN 0 ELSE 1 END AS MobiltelefonExists
+
+FROM [dbo].[rQT_BokningKund]
+) q
+
+  GROUP BY
+  q.KundIdExists ,
+  q.EpostExists,
+  q.MobiltelefonExists,
+  q.namnExists
+ORDER BY COUNT(*) DESC
 
 
-----3750123
-select count(distinct(BokningsId)) from rQT_BokningKund
-where BokningsId IN (select BokningsId from rQT_Bokning)
-
-
-
-----3735825
-select count(distinct(Bookingtid)) from fBookingTicket
-where customerKey != -1
-
----97
-select count(DISTINCT(BOKNINGSID)) from r_CustomerID_NonMatch
-where bokningsId IN (SELECT bokningsId FROM rQT_BokningKund)
-
-
-select count(*) from r_CustomerID_NonMatch
-where epost is null and Mobiltelefon is null and KundId is null
 
 
 
