@@ -1,0 +1,33 @@
+SELECT a.Epost, a.Mobiltelefon, a.KundID, (count(*)*1.0/7118192)*100 as '%'  ,count(*) as 'Count' 
+FROM
+(
+SELECT
+CASE WHEN Epost IS NOT NULL THEN 1 ELSE 0 END AS Epost,
+CASE WHEN MobilTelefon IS NOT NULL THEN 1 ELSE 0 END AS MobilTelefon,
+CASE WHEN KundID IS NOT NULL THEN 1 ELSE 0 END AS KundID
+FROM r_CustomerID_NonMatch 
+) a
+GROUP BY a.Epost, a.MobilTelefon, a.KundID
+ORDER BY '%' DESC
+
+
+----3750123
+select count(distinct(BokningsId)) from rQT_BokningKund
+where BokningsId IN (select BokningsId from rQT_Bokning)
+
+
+
+----3735825
+select count(distinct(Bookingtid)) from fBookingTicket
+where customerKey != -1
+
+---97
+select count(DISTINCT(BOKNINGSID)) from r_CustomerID_NonMatch
+where bokningsId IN (SELECT bokningsId FROM rQT_BokningKund)
+
+
+select count(*) from r_CustomerID_NonMatch
+where epost is null and Mobiltelefon is null and KundId is null
+
+
+
